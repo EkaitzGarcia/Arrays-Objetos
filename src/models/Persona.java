@@ -1,33 +1,31 @@
 package models;
 
 public class Persona {
-	private String Nombre;
-	private int Edad;
-	private int DNI;
 	
-	//Todos los getters
-	public String getNombre() {
-		return Nombre;
-	}
-	public int getEdad() {
-		return Edad;
-	}
-	public int getDNI() {
-		return DNI;
-	}
-	
-	//Todos los setters
-	public void setNombre(String nombre) {
-		Nombre = nombre;
-	}
-	public void setEdad(int edad) {
-		Edad = edad;
-	}
-	public void setDNI(int dNI) {
-		DNI = dNI;
-	}
-	
-	public static void Elimino(String Nombre, int Edad, int DNI) {
-		
-	}
+	private String nombre;
+    private int edad;
+    private String dni;
+    
+    public Persona(String nombre, int edad, String dni) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.dni = dni;
+    }
+    
+    public String getNombre() {
+        return nombre;
+    }
+    
+    public int getEdad() {
+        return edad;
+    }
+    
+    public String getDni() {
+        return dni;
+    }
+    
+    @Override
+    public String toString() {
+        return nombre + ", " + edad + " años, DNI " + dni;
+    }
 }
