@@ -1,109 +1,160 @@
 package principal;
-import models.Persona;
 
-public class Eliminar {
+import models.Almacen;
+
+public class Tienda {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
-		Persona[] personas = new Persona[3];
-		personas[0] = new Persona("Pedro", 19, "123");
-		personas[1] = new Persona("Maroto", 33, "456");
-		personas[2] = new Persona("Aitziber", 20, "678");
-		int contador = personas.length;
+
+		Almacen[] inventario = { new Almacen("Bujía", 20, true), new Almacen("Catalizador", 3, true),
+				new Almacen("Alternador", 1, true) };
+
+		int contador = inventario.length;
 		boolean encontrado = false;
 
-		for(int i = 0; i < contador; i++) {
-				System.out.println(personas[i]);
+		do {
+			System.out.println("\n=================MENU=================\n" 
+					+ "\n1.- Mostrar todos los productos.\n"
+					+ "2.- Modificar un producto.\n" 
+					+ "3.- Cambiar el orden de los productos.\n"
+					+ "4.- Contar productos activos.\n" 
+					+ "5.- Buscar producto.\n" 
+					+ "6.- Comprar unidades.\n"
+					+ "7.- Finializar programa.\n" 
+					+ "\n=======================================\n");
+
+			int opcion = Util.leerInt();
+
+			switch (opcion) {
+
+			case 1:
+
+				Mostrar(inventario);
+				break;
+
+			case 2:
+
+				Modificar(inventario);
+				break;
+
+			case 3:
+
+				Ordenar(inventario);
+				break;
+
+			case 4:
+
+				Activo(inventario);
+				break;
+
+			case 5:
+
+				Buscar(inventario);
+				break;
+
+			case 6:
+
+				Comprar(inventario);
+				break;
+
+			case 7:
+
+				System.out.println("Finalizando programa...");
+				return;
+
 			}
+		} while (true);
 
-		do{
+	}
 
-			int opcion = 0;
+	// Metodo para mostrar los artículos.
+	private static void Mostrar(Almacen[] inventario) {
 
-			while(opcion < 1 || opcion > 4){
-				System.out.println("\n=============MENU=============\n"
-						+"\n1.- Eliminar persona del array."
-						+"\n2.- Salir del programa."
-						+"\n3.- Ordenar de manera ascendente segun edad."
-						+"\n4.- Ordenar de manera descendente segun edad."
-						+"\n==============================\n");
+		int contador = inventario.length;
 
-				opcion = Util.leerInt();
+		System.out.println("Lista de productos:\n");
+		for (int i = 0; i < contador; i++) {
+			System.out.println(inventario[i].toString());
+		}
+	}
 
-				if (opcion < 1 || opcion > 4) {
-					System.out.println("Introduce una opción válida.");
+	// Metodo para modificar un producto.
+	private static void Modificar(Almacen[] inventario) {
+		
+		int contador = inventario.length;
+		String mod;
+		
+		System.out.println("\n¿Cual es el artículo que quieres modificar?");
+		mod = Util.introducirCadena();
+		
+		for(int i = 0; i < contador; i++) {
+			if(inventario[i].getArticulo().equalsIgnoreCase(mod)) {
+				
+				System.out.println("\n¿Quieres modificar el nombre? S/N");
+				char eleccion = Util.leerChar();
+				
+				if(eleccion == 'S' || eleccion == 's') {
+					System.out.println("\nIntroduce el nuevo nombre:");
+					String nuevonom = Util.introducirCadena();
+					inventario[i].setArticulo(nuevonom);
+				} else if(eleccion == 'N' || eleccion == 'n') {
+					System.out.println("\n¿Quieres cambiar las unidades? S/N");
+					char eleccion2 = Util.leerChar();
+					
+					if(eleccion2 == 'S' || eleccion2 == 's') {
+						System.out.println("\nIntroduce la nueva cantidad:");
+						int nuevacant = Util.leerInt();
+						inventario[i].setUnidades(nuevacant);
+					} else if(eleccion2 == 'N' || eleccion2 == 'n') {
+						System.out.println("\n¿Quieres cambiar el estado? S/N");
+						char eleccion3 = Util.leerChar();
+						
+						if(eleccion3 == 'S' || eleccion2 == 's') {
+							System.out.println("\nIntroduce el nuevo estado del artículo: A (Activo) / I (Inactivo)");
+							char nuevoest = Util.leerChar();
+							
+							if(nuevoest == 'A' || nuevoest == 'a') {
+								inventario[i].setEstado(true);
+							} else if(nuevoest == 'I' || nuevoest == 'i') {
+								inventario[i].setEstado(false);
+							}
+						}
+					}
 				}
 			}
-			switch(opcion) {
-				case 1:
-					System.out.println("Introduce el nombre de la persona a eliminar:");
-					String nombreEliminar = Util.introducirCadena();
+		}
+		
+	}
 
-					if(contador == 0){
-						System.out.println("No quedan personas en el array.");
-						break;
-					} else{
-						for(int i = 0; i < contador; i++) {
-							if(personas[i].getNombre().equalsIgnoreCase(nombreEliminar)) {
-								for(int j = i; j < contador - 1; j++) {
-									personas[j] = personas[j + 1];
-								}
-								personas[contador - 1] = null; // Elimina la referencia al último elemento
-								contador--;
-								encontrado = true;
-								System.out.println("Persona eliminada.");
-								break;
-							}
-						}
-						if(!encontrado) {
-							System.out.println("Persona no encontrada.");
-						}
-					}
+	// Metodo para ordenar productos.
+	private static void Ordenar(Almacen[] inventario) {
 
-					System.out.println("Asi queda el array tras eliminar el nombre " +nombreEliminar +":");
-					for(int k = 0; k < contador; k++) {
-						System.out.println(personas[k]);
-					}
-					break;
-				
-				case 2:
-					System.out.println("Saliendo del programa...");
-					return;
-				
-				case 3:
-					System.out.println("\nAqui tienes el array ordenado de manera ascendente segun la edad:");
-					for(int i = 0; i < contador -1; i++) {
-						for(int j = 0; j < contador -1 -i; j++) {
-							if(personas[j].getEdad() > personas[j + 1].getEdad()) {
-								Persona aux = personas[j];
-								personas[j] = personas[j + 1];
-								personas[j + 1] = aux;
-							}
-						}
-					}
-					for(int k = 0; k < contador; k++) {
-						System.out.println(personas[k]);
-					}
-					break;
-				
-				case 4:
-					System.out.println("\nAqui tienes el array ordenado de manera descendente segun la edad:");
-					for(int i = 0; i < contador -1; i++) {
-						for(int j = 0; j < contador -1 -i; j++) {
-							if(personas[j].getEdad() < personas[j + 1].getEdad()) {
-								Persona aux = personas[j];
-								personas[j] = personas[j + 1];
-								personas[j + 1] = aux;
-							}
-						}
-					}
-					for(int k = 0; k < contador; k++) {
-						System.out.println(personas[k]);
-					}
-					break;
-			}
-		}while(true);
+	}
+
+	// Metodo para ordenar por NOMBRE.
+	private static void OrdenarNombre(Almacen[] inventario) {
+
+	}
+
+	// Metodo para ordenar por UNIDADES
+	private static void OrdenarUnidades(Almacen[] inventario) {
+
+	}
+
+	// Metodo para contar productos ACTIVOS
+	private static void Activo(Almacen[] inventario) {
+
+	}
+
+	// Metodo para buscar productos por NOMBRE
+	private static void Buscar(Almacen[] inventario) {
+
+	}
+
+	// Metodo para comprar unidades.
+	private static void Comprar(Almacen[] inventario) {
+
 	}
 
 }
