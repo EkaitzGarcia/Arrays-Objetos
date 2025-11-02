@@ -10,9 +10,6 @@ public class Tienda {
 		Almacen[] inventario = { new Almacen("Bujía", 20, true), new Almacen("Catalizador", 3, true),
 				new Almacen("Alternador", 1, true) };
 
-		int contador = inventario.length;
-		boolean encontrado = false;
-
 		do {
 			System.out.println("\n=================MENU=================\n" 
 					+ "\n1.- Mostrar todos los productos.\n"
@@ -129,32 +126,121 @@ public class Tienda {
 
 	// Metodo para ordenar productos.
 	private static void Ordenar(Almacen[] inventario) {
-
+		System.out.println("\n¿Como quieres ordenar los productos?\n"
+				+ "1.- Por NOMBRE.\n"
+				+ "2.- Por UNIDADES.\n");
+		
+		int eleccion = Util.leerInt();
+		
+		switch(eleccion) {
+		
+		case 1:
+			OrdenarNombre(inventario);
+			break;
+			
+		case 2:
+			OrdenarUnidades(inventario);
+			break;
+		}
 	}
 
 	// Metodo para ordenar por NOMBRE.
 	private static void OrdenarNombre(Almacen[] inventario) {
-
+		
+		int contador = inventario.length;
+		Almacen temp;
+		
+		for(int i = 0; i < contador - 1; i++) {
+			for(int j = i + 1; j < contador; j++) {
+				if(inventario[i].getArticulo().compareToIgnoreCase(inventario[j].getArticulo()) > 0) {
+					temp = inventario[i];
+					inventario[i] = inventario[j];
+					inventario[j] = temp;
+				}
+			}
+		}
+		
+		System.out.println("\nProductos ordenados por NOMBRE:\n");
+		for(int i = 0; i < contador; i++) {
+			System.out.println(inventario[i].toString());
+		}
 	}
 
 	// Metodo para ordenar por UNIDADES
 	private static void OrdenarUnidades(Almacen[] inventario) {
-
+		int contador = inventario.length;
+		Almacen temp;
+		
+		for(int i = 0; i < contador - 1; i++) {
+			for(int j = i + 1; j < contador; j++) {
+				if(inventario[i].getUnidades() > inventario[j].getUnidades()) {
+					temp = inventario[i];
+					inventario[i] = inventario[j];
+					inventario[j] = temp;
+				}
+			}
+		}
+		
+		System.out.println("\nProductos ordenados por UNIDADES:\n");
+		for(int i = 0; i < contador; i++) {
+			System.out.println(inventario[i].toString());
+		}
 	}
 
 	// Metodo para contar productos ACTIVOS
 	private static void Activo(Almacen[] inventario) {
-
+		int contador = inventario.length;
+		int activos = 0;
+		
+		for(int i = 0; i < contador; i++) {
+			if(inventario[i].isEstado() == true) {
+				activos++;
+			}
+		}
+		
+		System.out.println("\nNúmero de productos activos: " + activos);
 	}
 
 	// Metodo para buscar productos por NOMBRE
 	private static void Buscar(Almacen[] inventario) {
-
+		int contador = inventario.length;
+		String busqueda;
+		boolean encontrado = false;
+		
+		System.out.println("\nIntroduce el nombre del artículo que quieres buscar:");
+		busqueda = Util.introducirCadena();
+		
+		for(int i = 0; i < contador; i++) {
+			if(inventario[i].getArticulo().equalsIgnoreCase(busqueda)) {
+				System.out.println("\nProducto encontrado:\n" + inventario[i].toString());
+				encontrado = true;
+			}
+		}
+		
+		if(encontrado == false) {
+			System.out.println("\nEl producto no se ha encontrado en el inventario.");
+		}
 	}
 
 	// Metodo para comprar unidades.
 	private static void Comprar(Almacen[] inventario) {
-
+		int contador = inventario.length;
+		String compra;
+		
+		System.out.println("\n¿Cual es el artículo que quieres comprar?");
+		compra = Util.introducirCadena();
+		
+		for(int i = 0; i < contador; i++) {
+			if(inventario[i].getArticulo().equalsIgnoreCase(compra)) {
+				System.out.println("\n¿Cuantas unidades quieres comprar?");
+				int unidadescompra = Util.leerInt();
+				
+				int totalunidades = inventario[i].getUnidades() + unidadescompra;
+				inventario[i].setUnidades(totalunidades);
+				
+				System.out.println("\nCompra realizada. Unidades totales de " + inventario[i].getArticulo() + ": " + inventario[i].getUnidades());
+			}
+		}
 	}
 
 }
