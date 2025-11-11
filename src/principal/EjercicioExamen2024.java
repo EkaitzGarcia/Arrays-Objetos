@@ -7,8 +7,6 @@ public class EjercicioExamen2024 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		NaveEspacial nave1 = new NaveEspacial("Starship", 2022, 2023, 8, 5);
-		NaveEspacial nave2 = new NaveEspacial("Apolo 11", 1950, 1960, 7, 4);
 		NaveEspacial[] mision = new NaveEspacial[50];
 		int opcion;
 	
@@ -310,3 +308,4 @@ public class EjercicioExamen2024 {
 	}
 
 }
+
