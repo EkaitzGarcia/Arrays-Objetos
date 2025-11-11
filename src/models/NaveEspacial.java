@@ -53,13 +53,18 @@ public class NaveEspacial {
 		this.totcap = totcap;
 		this.tripu = tripu;
 	}
+
+	//Metodo especial 1
+	public int calcularAntiguedad(int anioActual) {
+		return anioActual - this.getAniolanza();
+	}
 	
+	//Metodo especial 2
 	public boolean admitePasajeros() {
 		if(this.getTotcap() <= 0)
 			return false;
 				return true;
 	}
-	
 	
 	@Override
 	public String toString() {
