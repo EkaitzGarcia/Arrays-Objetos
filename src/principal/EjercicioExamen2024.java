@@ -1,8 +1,6 @@
 package principal;
-import models.NaveEspacial;
-
 import java.time.LocalDate;
-import java.time.LocalTime;
+import models.NaveEspacial;
 
 public class EjercicioExamen2024 {
 
@@ -11,9 +9,9 @@ public class EjercicioExamen2024 {
 		
 		NaveEspacial nave1 = new NaveEspacial("Starship", 2022, 2023, 8, 5);
 		NaveEspacial nave2 = new NaveEspacial("Apolo 11", 1950, 1960, 7, 4);
-		NaveEspacial[] mision = new NaveEspacial[4];
+		NaveEspacial[] mision = new NaveEspacial[50];
 		int opcion;
-		
+	
 		do {
 			System.out.println("\n=============MENU=============\n"
 					+ "\n1.- Añadir naves espaciales."
@@ -45,23 +43,23 @@ public class EjercicioExamen2024 {
 					
 				case 3:
 					
-					
-					
+					ordenarPorAnioLanzamiento(mision);
+					break;					
 					
 				case 4:
 					
-					
-					
+					modificarCapacidadTotal(mision);
+					break;
 					
 				case 5:
 					
-					
-					
+					mostrarNavesRegistradas(mision);
+					break;
 					
 				case 6:
 					
-					
-					
+					eliminarNaveEspacial(mision);
+					break;
 					
 				case 7:
 					
@@ -73,59 +71,28 @@ public class EjercicioExamen2024 {
 		
 	}
 	
-	//Metodo para calcular la antigüedad
-	public static void calcularAntiguedad(int añoactu, NaveEspacial nave1, NaveEspacial nave2) {
-		
-		//Petición y validación del año actual
-		do {
-			
-		System.out.println("\nAño actual: ");
-		añoactu = Util.leerInt();
-		
-		if(añoactu < 2025) {
-			System.out.println("\nIntroduce un valor válido.");
-		}
-		
-		}while(añoactu < 2025);
-		
-		//Petición y validación de la nave a verificar.
-		String eleccion;
-		do {
-		
-		System.out.println("\n¿Que nave quieres revisar? " +nave1.getNombre() +" / " +nave2.getNombre());
-		eleccion = Util.introducirCadena();
-		
-		if(!eleccion.equalsIgnoreCase(nave1.getNombre()) && !eleccion.equalsIgnoreCase(nave2.getNombre())) {
-			System.out.println("\nIntroduce una opción válida.");
-		}
-		
-		}while(!eleccion.equalsIgnoreCase(nave1.getNombre()) && !eleccion.equalsIgnoreCase(nave2.getNombre()));
-		
-		if(eleccion.equalsIgnoreCase(nave1.getNombre())) {
-			int antiguedad = añoactu - nave1.getAniocrea();
-			
-			System.out.println("\nLa nave " +nave1.getNombre() +" tiene una antigüedad de " +antiguedad +" años.");
-			
-		} else if(eleccion.equalsIgnoreCase(nave2.getNombre())) {
-			int antiguedad2 = añoactu - nave2.getAniocrea();
-			
-			System.out.println("\nLa nave " +nave2.getNombre() +" tiene una antigüedad de " +antiguedad2 +" años.");
-		
-		}
-		
-	}
-	
-	//Metodo para añadir nueva nave.
+	//Metodo para añadir nueva nave. (Case 1)
 	public static void añadirNave(NaveEspacial[] mision) {
 		for(int i = 0; i < mision.length; i++) {
 			String nuevoNombre;
 			int nuevoAniocrea, nuevoAniolanza, nuevoTotcap, nuevoTripu;
 			mision[i] = new NaveEspacial();
+			boolean exixte = false;
 			
 			//Petición y validación del nombre de la nave.
 			do {
 				System.out.println("\nIntroduce el nombre de la nave " +(i + 1) +":");
 				nuevoNombre = Util.introducirCadena();
+
+				for(int j = 0; j < i; j++) {
+					if(mision[j].getNombre().equalsIgnoreCase(nuevoNombre)) {
+						System.out.println("\nEsa nave ya existe. Introduce otro nombre.");
+						exixte = true;
+						break;
+					} else {
+						exixte = false;
+					}
+				}
 				
 				if(!nuevoNombre.matches("[a-zA-Z]+")) {
 					System.out.println("\nIntroduce un caracter vállido.");
@@ -133,7 +100,7 @@ public class EjercicioExamen2024 {
 					mision[i].setNombre(nuevoNombre);
 				}
 				
-			}while(!nuevoNombre.matches("[a-zA-Z]+"));
+			}while(!nuevoNombre.matches("[a-zA-Z]+") || exixte);
 			
 			//Petición y validación del año de creación de la nave.
 			do {
@@ -166,13 +133,13 @@ public class EjercicioExamen2024 {
 				System.out.println("\nIntroduce la capacidad máxima de la nave:");
 				nuevoTotcap = Util.leerInt();
 				
-				if(nuevoTotcap < 1) {
+				if(nuevoTotcap < 0) {
 					System.out.println("\nIntroduce un valor válido.");
 				} else {
 					mision[i].setTotcap(nuevoTotcap);
 				}
 				
-			}while(nuevoTotcap < 1);
+			}while(nuevoTotcap < 0);
 			
 			//Petición y validación de la tripulación mínima de la nave
 			do {
@@ -211,7 +178,7 @@ public class EjercicioExamen2024 {
 		}
 	}
 	
-	//Metodo para mostrar naves de antigüedad superior a X.
+	//Metodo para mostrar naves de antigüedad superior a X. (Case 2)
 	public static void mostrarPorAntiguedad(NaveEspacial[] mision) {
 		LocalDate fecha = LocalDate.now();
 		int años;
@@ -233,5 +200,113 @@ public class EjercicioExamen2024 {
 		}
 	}
 
+	//Metodo para ordenar naves por año de lanzamiento. (Case 3)
+	public static void ordenarPorAnioLanzamiento(NaveEspacial[] mision) {
+		int contador = mision.length;
+
+		NaveEspacial temp;
+
+		for(int i = 0; i < contador - 1; i++) {
+			for(int j = i + 1; j < contador; j++) {
+				if(mision[i].getAniolanza() > mision[j].getAniolanza()) {
+					temp = mision[i];
+					mision[i] = mision[j];
+					mision[j] = temp;
+				}
+			}
+		}
+
+		//Mostrar el array ordenado.
+		System.out.println("\nNaves ordenadas por año de lanzamiento:\n");
+		for(int i = 0; i < contador; i++) {
+			System.out.println(mision[i].toString());
+		}
+	}
+
+		//Metodo para modificar la capacidad total de las naves que admiten pasajeros. (Case 4)
+	public static void modificarCapacidadTotal(NaveEspacial[] mision) {
+		int contador = mision.length;
+		int nuevaCapacidad = 0;
+		char opcion;
+
+		for(int i = 0; i < contador; i++){
+			if(mision[i].admitePasajeros()){
+				System.out.println("\nLa anve " +mision[i].getNombre() +" admite " +mision[i].getTotcap() +" pasajeros.");
+				do{
+					System.out.println("\n¿Quieres modificar la capacidad total de la nave? S/N");
+					opcion = Util.leerChar();
+
+					if(opcion != 'S' && opcion != 's' && opcion != 'N' && opcion != 'n'){
+						System.out.println("\nIntroduce un caracter válido.");
+					}
+
+				}while(opcion != 'S' && opcion != 's' && opcion != 'N' && opcion != 'n');
+
+				if(opcion == 'S' || opcion == 's'){
+					do { 
+						System.out.println("\nIntroduce la nueva capacidad total de la nave:");
+						nuevaCapacidad = Util.leerInt();
+
+						if(nuevaCapacidad < mision[i].getTotcap()){
+							System.out.println("\nLa nueva capacidad no puede ser inferior a la actual.");
+						}
+					} while (nuevaCapacidad < mision[i].getTotcap());
+
+					mision[i].setTotcap(nuevaCapacidad);
+					System.out.println("\nCapacidad total modificada. Nueva info de la nave:\n"
+							+mision[i].toString() );
+				} else if(opcion == 'N' || opcion == 'n'){
+					System.out.println("\nNo se ha modificado la capacidad de la nave.");
+				}
+			} else{
+				System.out.println("\nLa nave " +mision[i].getNombre() +" no admite pasajeros, no se podrá modificar su capacidad.");
+			}
+		}
+	}
+
+	//Metodo para mostrar todas las naves registradas. (Case 5)
+	public static void mostrarNavesRegistradas(NaveEspacial[] mision){
+		int contador = mision.length;
+
+		System.out.println("\nNaves registradas:\n");
+		for(int i = 0; i < contador; i++){
+			System.out.println(mision[i].toString());
+		}
+	}
+
+	//Metodo para eliminar nave espacial. (Case 6)
+	public static void eliminarNaveEspacial(NaveEspacial[] mision){
+		int contador = mision.length;
+		String eliminar;
+		boolean encontrado = false;
+
+		do { 
+			System.out.println("\nIntroduce el nombre de la nave que quieres eliminar:");
+			eliminar = Util.introducirCadena();
+
+			if(!eliminar.matches("[a-zA-Z]+")) {
+				System.out.println("\nIntroduce un caracter válido.");
+			} 
+
+		} while (!eliminar.matches("[a-zA-Z]+"));
+
+		for(int i = 0; i < contador; i++){
+			if(mision[i].getNombre().equalsIgnoreCase(eliminar)){
+				encontrado = true;
+				mision[i] = null;
+				System.out.println("\nLa nave " +eliminar +" ha sido eliminada.");
+			}
+		}
+		if(!encontrado){
+			System.out.println("\nLa nave " +eliminar +" no se ha encontrado.");
+		} else{
+			System.out.println("\nNaves restantes:\n");
+			for(int i = 0; i < contador; i++){
+				if(mision[i] != null){
+					System.out.println(mision[i].toString());
+				}
+			}
+		}
+	}
 
 }
